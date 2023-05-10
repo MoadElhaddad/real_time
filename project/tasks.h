@@ -64,9 +64,6 @@ private:
     /**********************************************************************/
     ComMonitor monitor;
     ComRobot robot;
-    //***MODIF***
-    Camera   *cam;
-    MessageImg * MsgImg;
     int robotStarted = 0;
     int move = MESSAGE_ROBOT_STOP;
     
@@ -79,10 +76,7 @@ private:
     RT_TASK th_openComRobot;
     RT_TASK th_startRobot;
     RT_TASK th_move;
-    RT_TASK th_start_cam;
-    
-    //Creation de la tache streaming
-    RT_TASK th_stream_cam;
+    RT_TASK th_CheckBat;
     
     /**********************************************************************/
     /* Mutex                                                              */
@@ -91,10 +85,6 @@ private:
     RT_MUTEX mutex_robot;
     RT_MUTEX mutex_robotStarted;
     RT_MUTEX mutex_move;
-    RT_MUTEX mutex_openCamera;
-    
-    //Creation mutex pour stream cam
-    RT_MUTEX mutex_stream_cam;
 
     /**********************************************************************/
     /* Semaphores                                                         */
@@ -103,9 +93,6 @@ private:
     RT_SEM sem_openComRobot;
     RT_SEM sem_serverOk;
     RT_SEM sem_startRobot;
-    RT_SEM sem_openCam;
-    //Creation semaphore pour stream cam
-    RT_MUTEX sem_stream_cam;
 
     /**********************************************************************/
     /* Message queues                                                     */
@@ -135,7 +122,9 @@ private:
      * @brief Thread opening communication with the robot.
      */
     void OpenComRobot(void *arg);
-
+  
+    
+    void CheckBatteryState(void * arg) ;
     /**
      * @brief Thread starting the communication with the robot.
      */
@@ -145,19 +134,6 @@ private:
      * @brief Thread handling control of the robot.
      */
     void MoveTask(void *arg);
-    
-    
-    /**
-     * @brief Thread handling camera made by Redacteur.
-     */
-    void StartCamTask(void *arg);
-    
-    
-    /**
-     * @brief Thread handling camera made by Redacteur.
-     */
-    void StartStreamTask(void *arg);
-    
     
     /**********************************************************************/
     /* Queue services                                                     */
